@@ -15,7 +15,6 @@ import { Progress } from '@/components/ui/progress'
 import {
   MessageCircle,
   Target,
-  Handshake,
   CalendarClock,
   Pencil,
   Phone,
@@ -117,14 +116,6 @@ export default async function PersonDetailPage({ params }: PersonDetailPageProps
         <Link href={`/people/${person.id}/interactions/new`} className={cn(buttonVariants({ size: "sm" }), "bg-teal-600 hover:bg-teal-700")}>
             <MessageCircle className="mr-1.5 size-3.5" />
             Log Interaction
-        </Link>
-        <Link href={`/people/${person.id}/goals/new`} className={cn(buttonVariants({ size: "sm", variant: "outline" }))}>
-            <Target className="mr-1.5 size-3.5" />
-            Add Goal
-        </Link>
-        <Link href={`/people/${person.id}/commitments/new`} className={cn(buttonVariants({ size: "sm", variant: "outline" }))}>
-            <Handshake className="mr-1.5 size-3.5" />
-            Add Commitment
         </Link>
         <Link href={`/people/${person.id}/follow-ups/new`} className={cn(buttonVariants({ size: "sm", variant: "outline" }))}>
             <CalendarClock className="mr-1.5 size-3.5" />

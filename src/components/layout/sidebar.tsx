@@ -1,20 +1,41 @@
 'use client'
 
 import Link from 'next/link'
-import { LayoutDashboard, Users, MessageCircle, CheckSquare, CalendarClock, CalendarDays, Settings, LogOut } from 'lucide-react'
+import { LayoutDashboard, Users, CalendarClock, MessageCircle, CheckSquare, CalendarDays, Settings, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
-const navItems = [
+const coreItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/people', label: 'People', icon: Users },
+  { href: '/follow-ups', label: 'Follow-ups', icon: CalendarClock },
+]
+
+const moreItems = [
   { href: '/interactions', label: 'Interactions', icon: MessageCircle },
   { href: '/commitments', label: 'Commitments', icon: CheckSquare },
-  { href: '/follow-ups', label: 'Follow-ups', icon: CalendarClock },
   { href: '/weekly-plan', label: 'Weekly Plan', icon: CalendarDays },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
+
+function NavLink({ item, pathname }: { item: typeof coreItems[number]; pathname: string }) {
+  const isActive = pathname.startsWith(item.href)
+  return (
+    <Link
+      href={item.href}
+      className={cn(
+        'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+        isActive
+          ? 'bg-teal-50 text-teal-700'
+          : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+      )}
+    >
+      <item.icon className="h-5 w-5" />
+      {item.label}
+    </Link>
+  )
+}
 
 export function Sidebar({ pathname }: { pathname: string }) {
   const router = useRouter()
@@ -27,7 +48,7 @@ export function Sidebar({ pathname }: { pathname: string }) {
   }
 
   return (
-    <aside className="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 border-r bg-card">
+    <aside className="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 border-r bg-card z-40">
       <div className="flex items-center gap-2 px-6 h-16 border-b">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-600 text-white font-bold text-sm">
           P
@@ -36,24 +57,17 @@ export function Sidebar({ pathname }: { pathname: string }) {
       </div>
 
       <nav className="flex-1 px-3 py-6 space-y-1">
-        {navItems.map((item) => {
-          const isActive = pathname.startsWith(item.href)
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-teal-50 text-teal-700'
-                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-              )}
-            >
-              <item.icon className="h-5 w-5" />
-              {item.label}
-            </Link>
-          )
-        })}
+        {coreItems.map((item) => (
+          <NavLink key={item.href} item={item} pathname={pathname} />
+        ))}
+
+        <div className="pt-4 pb-2 px-3">
+          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground/60">More</span>
+        </div>
+
+        {moreItems.map((item) => (
+          <NavLink key={item.href} item={item} pathname={pathname} />
+        ))}
       </nav>
 
       <div className="px-3 py-4 border-t">

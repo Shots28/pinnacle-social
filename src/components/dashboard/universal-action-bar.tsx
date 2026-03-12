@@ -28,7 +28,7 @@ export function UniversalActionBar({ people }: UniversalActionBarProps) {
 
   return (
     <>
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-white dark:bg-zinc-900 shadow-xl border rounded-full px-2 py-2 flex items-center gap-2">
+      <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-40 bg-white dark:bg-zinc-900 shadow-xl border rounded-full px-2 py-2 flex items-center gap-2">
         <Button
           variant="ghost"
           size="icon"

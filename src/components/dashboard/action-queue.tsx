@@ -40,7 +40,23 @@ export function ActionQueue({ overduePeople, followUps }: ActionQueueProps) {
     }
 
     setCompletedFollowUps((prev) => new Set(prev).add(followUpId))
-    toast.success('Follow-up completed! Momentum +1')
+    toast.success('Follow-up completed! Momentum +1', {
+      action: {
+        label: 'Undo',
+        onClick: async () => {
+          const supabase2 = createClient()
+          await supabase2
+            .from('follow_ups')
+            .update({ is_completed: false, completed_at: null })
+            .eq('id', followUpId)
+          setCompletedFollowUps((prev) => {
+            const next = new Set(prev)
+            next.delete(followUpId)
+            return next
+          })
+        },
+      },
+    })
   }
 
   const hasNoActions = overduePeople.length === 0 && followUps.length === 0

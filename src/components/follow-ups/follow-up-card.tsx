@@ -49,7 +49,18 @@ export function FollowUpCard({ followUp, showPerson = true }: FollowUpCardProps)
         .eq('id', followUp.id)
 
       if (error) throw error
-      toast.success(newCompleted ? 'Follow-up completed' : 'Follow-up reopened')
+      if (newCompleted) {
+        toast.success('Follow-up completed', {
+          action: {
+            label: 'Undo',
+            onClick: () => {
+              handleToggle()
+            },
+          },
+        })
+      } else {
+        toast.success('Follow-up reopened')
+      }
       router.refresh()
     } catch (err) {
       setCompleted(!newCompleted) // Revert

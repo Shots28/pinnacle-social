@@ -1,14 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { LayoutDashboard, Users, MessageCircle, CalendarDays, Menu } from 'lucide-react'
+import { LayoutDashboard, Users, CalendarClock, Menu } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
   { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
   { href: '/people', label: 'People', icon: Users },
-  { href: '/interactions', label: 'Log', icon: MessageCircle },
-  { href: '/weekly-plan', label: 'Plan', icon: CalendarDays },
+  { href: '/follow-ups', label: 'Follow-ups', icon: CalendarClock },
   { href: '/settings', label: 'More', icon: Menu },
 ]
 

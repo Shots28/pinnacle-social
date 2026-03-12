@@ -43,7 +43,18 @@ export function CommitmentCard({ commitment, showPerson = false, onStatusChange 
         .eq('id', commitment.id)
 
       if (error) throw error
-      toast.success('Commitment completed!')
+      toast.success('Commitment completed!', {
+        action: {
+          label: 'Undo',
+          onClick: async () => {
+            await supabase
+              .from('commitments')
+              .update({ status: 'pending', completed_at: null })
+              .eq('id', commitment.id)
+            onStatusChange?.()
+          },
+        },
+      })
       onStatusChange?.()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to complete commitment')

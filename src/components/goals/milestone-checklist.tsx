@@ -24,7 +24,7 @@ export function MilestoneChecklist({ milestones: initialMilestones, goalId, onUp
   const handleCloseCelebration = useCallback(() => setShowCelebration(false), [])
 
   async function toggleMilestone(milestone: Milestone) {
-    if (milestone.is_completed) return // Don't un-complete
+    if (milestone.is_completed) return
     setLoading(milestone.id)
 
     try {
@@ -44,7 +44,6 @@ export function MilestoneChecklist({ milestones: initialMilestones, goalId, onUp
       // Check if all milestones are now completed
       const allCompleted = updated.every((m) => m.is_completed)
       if (allCompleted && updated.length > 0) {
-        // Mark goal as completed
         await supabase
           .from('goals')
           .update({ status: 'completed', completed_at: now })
@@ -53,7 +52,29 @@ export function MilestoneChecklist({ milestones: initialMilestones, goalId, onUp
         setShowCelebration(true)
       }
 
-      toast.success('Milestone completed!')
+      toast.success('Milestone completed!', {
+        action: {
+          label: 'Undo',
+          onClick: async () => {
+            await supabase
+              .from('milestones')
+              .update({ is_completed: false, completed_at: null })
+              .eq('id', milestone.id)
+            if (allCompleted) {
+              await supabase
+                .from('goals')
+                .update({ status: 'active', completed_at: null })
+                .eq('id', goalId)
+            }
+            setMilestones((prev) =>
+              prev.map((m) =>
+                m.id === milestone.id ? { ...m, is_completed: false, completed_at: null } : m
+              )
+            )
+            onUpdate?.()
+          },
+        },
+      })
       onUpdate?.()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Failed to update milestone')

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { Loader2 } from 'lucide-react'
+import { Loader2, ChevronDown } from 'lucide-react'
 
 interface PersonFormProps {
   initialData?: Person
@@ -32,6 +32,7 @@ export function PersonForm({ initialData, onSuccess }: PersonFormProps) {
 
   const [loading, setLoading] = useState(false)
   const [households, setHouseholds] = useState<Household[]>([])
+  const [showMoreDetails, setShowMoreDetails] = useState(isEditing)
 
   const [firstName, setFirstName] = useState(initialData?.first_name ?? '')
   const [lastName, setLastName] = useState(initialData?.last_name ?? '')
@@ -203,122 +204,137 @@ export function PersonForm({ initialData, onSuccess }: PersonFormProps) {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Contact Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label htmlFor="phone" className="text-sm font-medium">
-                  Phone
-                </label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="Phone number"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
-                  Email
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email address"
-                />
-              </div>
-            </div>
+        {!showMoreDetails && (
+          <button
+            type="button"
+            onClick={() => setShowMoreDetails(true)}
+            className="flex items-center gap-2 text-sm font-medium text-teal-600 hover:text-teal-700 transition-colors py-2"
+          >
+            <ChevronDown className="size-4" />
+            Add more details (phone, email, birthday, rhythm...)
+          </button>
+        )}
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label htmlFor="birthday" className="text-sm font-medium">
-                  Birthday
-                </label>
-                <Input
-                  id="birthday"
-                  type="date"
-                  value={birthday}
-                  onChange={(e) => setBirthday(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Contact Rhythm</label>
-                <Select
-                  value={contactRhythmDays?.toString() ?? ''}
-                  onValueChange={(val) =>
-                    val !== null && setContactRhythmDays(val === '' ? null : Number(val))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="No rhythm">
-                      {contactRhythmDays
-                        ? CONTACT_RHYTHM_OPTIONS.find((o) => o.value === contactRhythmDays)?.label ?? `Every ${contactRhythmDays} days`
-                        : 'No rhythm'}
-                    </SelectValue>
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">No rhythm</SelectItem>
-                    {CONTACT_RHYTHM_OPTIONS.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value.toString()}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {showMoreDetails && (
+          <>
+            <Card>
+              <CardHeader>
+                <CardTitle>Contact Details</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label htmlFor="phone" className="text-sm font-medium">
+                      Phone
+                    </label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Phone number"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email
+                    </label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Email address"
+                    />
+                  </div>
+                </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Additional</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Household</label>
-              <Select
-                value={householdId ?? ''}
-                onValueChange={(val) => val !== null && setHouseholdId(val === '' ? null : val)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="No household">
-                    {householdId
-                      ? households.find((h) => h.id === householdId)?.name ?? 'No household'
-                      : 'No household'}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="">No household</SelectItem>
-                  {households.map((h) => (
-                    <SelectItem key={h.id} value={h.id}>
-                      {h.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label htmlFor="birthday" className="text-sm font-medium">
+                      Birthday
+                    </label>
+                    <Input
+                      id="birthday"
+                      type="date"
+                      value={birthday}
+                      onChange={(e) => setBirthday(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Contact Rhythm</label>
+                    <Select
+                      value={contactRhythmDays?.toString() ?? ''}
+                      onValueChange={(val) =>
+                        val !== null && setContactRhythmDays(val === '' ? null : Number(val))
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="No rhythm">
+                          {contactRhythmDays
+                            ? CONTACT_RHYTHM_OPTIONS.find((o) => o.value === contactRhythmDays)?.label ?? `Every ${contactRhythmDays} days`
+                            : 'No rhythm'}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">No rhythm</SelectItem>
+                        {CONTACT_RHYTHM_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value.toString()}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="space-y-2">
-              <label htmlFor="notes" className="text-sm font-medium">
-                Notes
-              </label>
-              <Textarea
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Any notes about this person..."
-                rows={4}
-              />
-            </div>
-          </CardContent>
-        </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Additional</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Household</label>
+                  <Select
+                    value={householdId ?? ''}
+                    onValueChange={(val) => val !== null && setHouseholdId(val === '' ? null : val)}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="No household">
+                        {householdId
+                          ? households.find((h) => h.id === householdId)?.name ?? 'No household'
+                          : 'No household'}
+                      </SelectValue>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">No household</SelectItem>
+                      {households.map((h) => (
+                        <SelectItem key={h.id} value={h.id}>
+                          {h.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="notes" className="text-sm font-medium">
+                    Notes
+                  </label>
+                  <Textarea
+                    id="notes"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    placeholder="Any notes about this person..."
+                    rows={4}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
 
         <div className="flex justify-end gap-3">
           <Button
