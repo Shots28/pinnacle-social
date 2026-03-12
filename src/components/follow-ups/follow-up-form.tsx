@@ -64,10 +64,13 @@ export function FollowUpForm({ personId, people, onSuccess }: FollowUpFormProps)
       if (error) throw error
 
       toast.success('Follow-up scheduled')
-      setTitle('')
-      setNotes('')
-      setScheduledAt('')
-      onSuccess?.()
+      if (onSuccess) {
+        onSuccess()
+      } else if (personId) {
+        router.push(`/people/${personId}`)
+      } else {
+        router.push('/follow-ups')
+      }
       router.refresh()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong')
@@ -85,7 +88,11 @@ export function FollowUpForm({ personId, people, onSuccess }: FollowUpFormProps)
           </label>
           <Select value={selectedPersonId} onValueChange={(v) => v !== null && setSelectedPersonId(v)}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a person" />
+              <SelectValue placeholder="Select a person">
+                {selectedPersonId
+                  ? (() => { const pp = people?.find((p) => p.id === selectedPersonId); return pp ? `${pp.first_name}${pp.last_name ? ` ${pp.last_name}` : ''}` : 'Select a person' })()
+                  : 'Select a person'}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {people.map((p) => (

@@ -102,10 +102,8 @@ export function InteractionForm({ personId, people, onSuccess }: InteractionForm
     if (onSuccess) {
       onSuccess()
     } else if (personId) {
+      router.push(`/people/${personId}`)
       router.refresh()
-      setTitle('')
-      setNotes('')
-      setType('conversation')
     } else {
       router.push('/interactions')
       router.refresh()
@@ -120,7 +118,11 @@ export function InteractionForm({ personId, people, onSuccess }: InteractionForm
           <label className="text-sm font-medium">Person</label>
           <Select value={selectedPersonId} onValueChange={(v) => v !== null && setSelectedPersonId(v)}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a person..." />
+              <SelectValue placeholder="Select a person...">
+                {selectedPersonId
+                  ? (() => { const p = people?.find((p) => p.id === selectedPersonId); return p ? `${p.first_name} ${p.last_name ?? ''}`.trim() : 'Select a person...' })()
+                  : 'Select a person...'}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {people.map((person) => (

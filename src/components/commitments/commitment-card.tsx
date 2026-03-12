@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/utils/dates'
+import { cn } from '@/lib/utils'
 import type { Commitment, CommitmentStatus, Person } from '@/lib/types/app'
 
 interface CommitmentCardProps {
@@ -56,57 +57,64 @@ export function CommitmentCard({ commitment, showPerson = false, onStatusChange 
     : null
 
   return (
-    <Card>
-      <CardContent>
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0 space-y-2">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-sm">{commitment.title}</h3>
-              <Badge variant="outline" className={status.className}>
-                {status.label}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-3 flex-wrap">
-              {showPerson && personName && (
-                <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <User className="h-3 w-3" />
-                  {personName}
-                </span>
-              )}
-              <Badge
-                variant="secondary"
-                className="text-xs"
-              >
-                {commitment.committed_by === 'me' ? 'By me' : 'By them'}
-              </Badge>
-              {commitment.due_date && (
-                <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
-                  {formatDate(commitment.due_date)}
-                </span>
-              )}
-            </div>
-            {commitment.description && (
-              <p className="text-xs text-muted-foreground line-clamp-2">
-                {commitment.description}
-              </p>
-            )}
-          </div>
-
-          {commitment.status === 'pending' && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={markComplete}
-              disabled={loading}
-              className="shrink-0 gap-1 text-green-600 hover:text-green-700 hover:bg-green-50"
-            >
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              Done
-            </Button>
+    <div className={cn(
+      "group relative flex items-start gap-4 p-4 rounded-xl border bg-card transition-all hover:shadow-sm",
+      commitment.status === 'completed' && "opacity-60 bg-muted/30"
+    )}>
+      <div className="flex-shrink-0 pt-0.5">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={markComplete}
+          disabled={loading || commitment.status !== 'pending'}
+          className={cn(
+            "h-8 w-8 rounded-full border-2 transition-colors",
+            commitment.status === 'completed' 
+              ? "bg-teal-500 border-teal-600 text-white" 
+              : "border-muted-foreground/30 text-transparent hover:border-teal-400 hover:text-teal-600",
+            commitment.status === 'overdue' && "border-red-400"
+          )}
+        >
+          <CheckCircle2 className="size-4" />
+        </Button>
+      </div>
+      
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-4">
+          <h3 className={cn("text-sm font-semibold truncate", commitment.status === 'completed' && "line-through text-muted-foreground")}>
+            {commitment.title}
+          </h3>
+          {commitment.status === 'overdue' && (
+            <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider text-red-600 border-red-200 bg-red-50 px-2 py-0">
+              Overdue
+            </Badge>
           )}
         </div>
-      </CardContent>
-    </Card>
+        
+        {commitment.description && (
+          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+            {commitment.description}
+          </p>
+        )}
+
+        <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground font-medium">
+          {showPerson && personName && (
+            <span className="flex items-center gap-1 hover:text-foreground transition-colors cursor-pointer text-foreground/80">
+              <User className="size-3" />
+              {personName}
+            </span>
+          )}
+          <span className="flex items-center gap-1 bg-muted px-1.5 py-0.5 rounded-md">
+            {commitment.committed_by === 'me' ? 'By me' : 'By them'}
+          </span>
+          {commitment.due_date && (
+            <span className={cn("flex items-center gap-1", commitment.status === 'overdue' && "text-red-500")}>
+              <Calendar className="size-3" />
+              {formatDate(commitment.due_date)}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
   )
 }

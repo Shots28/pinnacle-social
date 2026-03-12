@@ -9,15 +9,15 @@ export function EmotionalPayoff({ stats }: EmotionalPayoffProps) {
   const message = getMessage(stats)
 
   return (
-    <div className="rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 p-6 text-white">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20">
-          <message.icon className="h-5 w-5" />
+    <div className="rounded-xl border border-teal-200 bg-gradient-to-r from-teal-50 to-teal-100/50 p-6 shadow-sm">
+      <div className="flex items-center gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-600 shadow-inner">
+          <message.icon className="h-6 w-6 text-white" />
         </div>
-        <div>
-          <p className="text-base font-semibold">{message.text}</p>
+        <div className="flex-1">
+          <p className="text-lg font-semibold text-teal-900">{message.text}</p>
           {message.subtext && (
-            <p className="text-sm text-teal-100 mt-0.5">{message.subtext}</p>
+            <p className="text-sm font-medium text-teal-700/80 mt-1">{message.subtext}</p>
           )}
         </div>
       </div>

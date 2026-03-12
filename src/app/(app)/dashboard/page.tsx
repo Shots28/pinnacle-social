@@ -4,10 +4,9 @@ import { PageHeader } from '@/components/layout/page-header'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { StatsRow } from '@/components/dashboard/stats-row'
 import { EmotionalPayoff } from '@/components/dashboard/emotional-payoff'
-import { OverdueCheckins } from '@/components/dashboard/overdue-checkins'
-import { UpcomingFollowUps } from '@/components/dashboard/upcoming-follow-ups'
+import { ActionQueue } from '@/components/dashboard/action-queue'
 import { RecentWins } from '@/components/dashboard/recent-wins'
-import { QuickLogButton } from '@/components/interactions/quick-log-button'
+import { UniversalActionBar } from '@/components/dashboard/universal-action-bar'
 import type { DashboardStats } from '@/lib/types/app'
 
 function getGreeting(): string {
@@ -25,28 +24,58 @@ export default async function DashboardPage() {
 
   if (!user) redirect('/login')
 
-  // Fetch dashboard stats via RPC
-  const { data: statsData } = await supabase.rpc('get_dashboard_stats', { p_user_id: user.id })
-  const stats: DashboardStats = (statsData as DashboardStats) ?? {
-    total_people: 0,
-    overdue_checkins: 0,
-    pending_commitments: 0,
-    todays_follow_ups: 0,
-    weekly_interactions: 0,
-    recent_milestones: [],
-  }
-
-  // Fetch overdue people
-  const { data: allPeople } = await supabase
-    .from('people')
-    .select('*')
-    .eq('user_id', user.id)
-    .eq('status', 'active')
-    .not('contact_rhythm_days', 'is', null)
-    .order('last_contact_at', { ascending: true, nullsFirst: true })
-
+  // Fetch all data in parallel for dashboard stats
   const now = new Date()
-  const overduePeople = (allPeople ?? []).filter((person) => {
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+  const todayEnd = new Date(todayStart)
+  todayEnd.setDate(todayEnd.getDate() + 1)
+  const weekEnd = new Date(todayStart)
+  weekEnd.setDate(weekEnd.getDate() + 7)
+  const weekAgo = new Date(now)
+  weekAgo.setDate(weekAgo.getDate() - 7)
+
+  const [
+    { data: allPeople },
+    { count: pendingCommitmentsCount },
+    { count: todaysFollowUpsCount },
+    { count: weeklyInteractionsCount },
+    { data: recentMilestones },
+  ] = await Promise.all([
+    supabase
+      .from('people')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .order('last_contact_at', { ascending: true, nullsFirst: true }),
+    supabase
+      .from('commitments')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('status', 'pending'),
+    supabase
+      .from('follow_ups')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('is_completed', false)
+      .gte('scheduled_at', todayStart.toISOString())
+      .lt('scheduled_at', todayEnd.toISOString()),
+    supabase
+      .from('interactions')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .gte('occurred_at', weekAgo.toISOString()),
+    supabase
+      .from('milestones')
+      .select('*, goals(title, people(first_name, last_name))')
+      .eq('is_completed', true)
+      .gte('completed_at', weekAgo.toISOString())
+      .order('completed_at', { ascending: false })
+      .limit(5),
+  ])
+
+  const people = allPeople ?? []
+  const overduePeople = people.filter((person) => {
     if (!person.contact_rhythm_days) return false
     if (!person.last_contact_at) return true
     const diffDays = Math.floor(
@@ -55,11 +84,23 @@ export default async function DashboardPage() {
     return diffDays > person.contact_rhythm_days
   }).slice(0, 5)
 
-  // Fetch today's and upcoming follow-ups
-  const todayStart = new Date()
-  todayStart.setHours(0, 0, 0, 0)
-  const weekEnd = new Date(todayStart)
-  weekEnd.setDate(weekEnd.getDate() + 7)
+  const stats: DashboardStats = {
+    total_people: people.length,
+    overdue_checkins: overduePeople.length,
+    pending_commitments: pendingCommitmentsCount ?? 0,
+    todays_follow_ups: todaysFollowUpsCount ?? 0,
+    weekly_interactions: weeklyInteractionsCount ?? 0,
+    recent_milestones: (recentMilestones ?? []).map((m) => ({
+      id: m.id,
+      title: m.title,
+      completed_at: m.completed_at ?? new Date().toISOString(),
+      goal_title: (m.goals as { title?: string })?.title ?? '',
+      person_name: (() => {
+        const p = (m.goals as { people?: { first_name: string; last_name?: string } })?.people
+        return p ? `${p.first_name} ${p.last_name ?? ''}`.trim() : ''
+      })(),
+    })),
+  }
 
   const { data: followUps } = await supabase
     .from('follow_ups')
@@ -90,24 +131,9 @@ export default async function DashboardPage() {
 
       <EmotionalPayoff stats={stats} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Overdue Check-ins</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <OverdueCheckins people={overduePeople} />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Follow-ups</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <UpcomingFollowUps followUps={followUps ?? []} />
-          </CardContent>
-        </Card>
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold tracking-tight">Your Action Queue</h2>
+        <ActionQueue overduePeople={overduePeople} followUps={followUps ?? []} />
       </div>
 
       <Card>
@@ -119,7 +145,7 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
 
-      <QuickLogButton people={peopleList ?? []} />
+      <UniversalActionBar people={peopleList ?? []} />
     </div>
   )
 }

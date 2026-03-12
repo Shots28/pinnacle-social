@@ -247,7 +247,9 @@ export default function OnboardingPage() {
                         onValueChange={(val) => val !== null && setRelationshipType(val as RelationshipType)}
                       >
                         <SelectTrigger className="w-full">
-                          <SelectValue />
+                          <SelectValue>
+                            {RELATIONSHIP_TYPES.find((rt) => rt.value === relationshipType)?.label ?? 'Select relationship'}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {RELATIONSHIP_TYPES.map((type) => (
@@ -271,7 +273,11 @@ export default function OnboardingPage() {
                         }
                       >
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="How often to check in" />
+                          <SelectValue placeholder="How often to check in">
+                            {contactRhythmDays
+                              ? CONTACT_RHYTHM_OPTIONS.find((o) => o.value === contactRhythmDays)?.label ?? 'How often to check in'
+                              : 'How often to check in'}
+                          </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           {CONTACT_RHYTHM_OPTIONS.map((opt) => (
@@ -328,7 +334,11 @@ export default function OnboardingPage() {
                       }
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Choose a rhythm" />
+                        <SelectValue placeholder="Choose a rhythm">
+                          {rhythmValue
+                            ? CONTACT_RHYTHM_OPTIONS.find((o) => o.value === rhythmValue)?.label ?? 'Choose a rhythm'
+                            : 'Choose a rhythm'}
+                        </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         {CONTACT_RHYTHM_OPTIONS.map((opt) => (

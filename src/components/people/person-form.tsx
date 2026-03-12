@@ -22,9 +22,10 @@ import { Loader2 } from 'lucide-react'
 
 interface PersonFormProps {
   initialData?: Person
+  onSuccess?: (id: string) => void
 }
 
-export function PersonForm({ initialData }: PersonFormProps) {
+export function PersonForm({ initialData, onSuccess }: PersonFormProps) {
   const router = useRouter()
   const supabase = createClient()
   const isEditing = !!initialData
@@ -105,7 +106,11 @@ export function PersonForm({ initialData }: PersonFormProps) {
 
         if (error) throw error
         toast.success('Person added successfully')
-        router.push(`/people/${data.id}`)
+        if (onSuccess) {
+          onSuccess(data.id)
+        } else {
+          router.push(`/people/${data.id}`)
+        }
       }
 
       router.refresh()
@@ -156,7 +161,9 @@ export function PersonForm({ initialData }: PersonFormProps) {
                 <label className="text-sm font-medium">Relationship</label>
                 <Select value={relationshipType} onValueChange={(val) => val !== null && setRelationshipType(val as typeof relationshipType)}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select relationship" />
+                    <SelectValue placeholder="Select relationship">
+                      {RELATIONSHIP_TYPES.find((rt) => rt.value === relationshipType)?.label ?? 'Select relationship'}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {RELATIONSHIP_TYPES.map((rt) => (
@@ -249,7 +256,11 @@ export function PersonForm({ initialData }: PersonFormProps) {
                   }
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="No rhythm" />
+                    <SelectValue placeholder="No rhythm">
+                      {contactRhythmDays
+                        ? CONTACT_RHYTHM_OPTIONS.find((o) => o.value === contactRhythmDays)?.label ?? `Every ${contactRhythmDays} days`
+                        : 'No rhythm'}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="">No rhythm</SelectItem>
@@ -277,7 +288,11 @@ export function PersonForm({ initialData }: PersonFormProps) {
                 onValueChange={(val) => val !== null && setHouseholdId(val === '' ? null : val)}
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="No household" />
+                  <SelectValue placeholder="No household">
+                    {householdId
+                      ? households.find((h) => h.id === householdId)?.name ?? 'No household'
+                      : 'No household'}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">No household</SelectItem>
@@ -309,7 +324,10 @@ export function PersonForm({ initialData }: PersonFormProps) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.back()}
+            onClick={() => {
+              if (onSuccess) onSuccess('') // Let parent know it was cancelled or handled
+              else router.back()
+            }}
           >
             Cancel
           </Button>

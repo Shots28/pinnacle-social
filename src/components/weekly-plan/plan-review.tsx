@@ -50,13 +50,15 @@ export function PlanReview({ stats }: PlanReviewProps) {
             return (
               <div
                 key={metric.label}
-                className="flex flex-col items-center gap-2 rounded-lg border p-4 text-center"
+                className="group flex flex-col items-center gap-3 rounded-xl border bg-card p-6 text-center transition-all hover:shadow-md hover:border-teal-200"
               >
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full ${metric.bg}`}>
-                  <Icon className={`h-5 w-5 ${metric.color}`} />
+                <div className={`flex h-12 w-12 items-center justify-center rounded-full transition-transform group-hover:scale-110 ${metric.bg}`}>
+                  <Icon className={`h-6 w-6 ${metric.color}`} />
                 </div>
-                <span className="text-2xl font-bold">{metric.value}</span>
-                <span className="text-xs text-muted-foreground">{metric.label}</span>
+                <div className="space-y-1">
+                  <span className="text-3xl font-bold tracking-tight text-foreground/90">{metric.value}</span>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{metric.label}</p>
+                </div>
               </div>
             )
           })}

@@ -65,10 +65,13 @@ export function CommitmentForm({ personId, interactionId, people, onSuccess }: C
       if (error) throw error
 
       toast.success('Commitment created')
-      setTitle('')
-      setDescription('')
-      setDueDate('')
-      onSuccess?.()
+      if (onSuccess) {
+        onSuccess()
+      } else if (personId) {
+        router.push(`/people/${personId}`)
+      } else {
+        router.push('/commitments')
+      }
       router.refresh()
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong')
@@ -86,7 +89,11 @@ export function CommitmentForm({ personId, interactionId, people, onSuccess }: C
           </label>
           <Select value={selectedPersonId} onValueChange={(v) => v !== null && setSelectedPersonId(v)}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select a person" />
+              <SelectValue placeholder="Select a person">
+                {selectedPersonId
+                  ? (() => { const pp = people?.find((p) => p.id === selectedPersonId); return pp ? `${pp.first_name}${pp.last_name ? ` ${pp.last_name}` : ''}` : 'Select a person' })()
+                  : 'Select a person'}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               {people.map((p) => (

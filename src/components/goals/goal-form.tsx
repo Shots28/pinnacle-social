@@ -156,7 +156,11 @@ export function GoalForm({ personId, initialData, dimensions }: GoalFormProps) {
         <label className="text-sm font-medium">Life Dimension</label>
         <Select value={dimensionId} onValueChange={(v) => v !== null && setDimensionId(v)}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Select a dimension" />
+            <SelectValue placeholder="Select a dimension">
+              {dimensionId
+                ? dimensions.find((d) => d.id === dimensionId)?.name ?? 'Select a dimension'
+                : 'Select a dimension'}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             {dimensions.map((dim) => (
