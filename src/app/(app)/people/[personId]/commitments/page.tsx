@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { PageHeader } from '@/components/layout/page-header'
 import { EmptyState } from '@/components/shared/empty-state'
 import { CommitmentList } from '@/components/commitments/commitment-list'
-import { buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button-variants'
 import { cn } from '@/lib/utils'
 
 export default async function PersonCommitmentsPage({
