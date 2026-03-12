@@ -13,7 +13,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { LogOut, Trash2, Loader2 } from 'lucide-react'
@@ -139,7 +138,7 @@ export function AccountSection() {
           </div>
 
           <DialogFooter>
-            <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+            <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>Cancel</Button>
             <Button
               variant="destructive"
               onClick={handleDeleteAccount}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Users, CalendarClock, Plus, Menu, MessageSquarePlus, UserPlus, CheckSquare } from 'lucide-react'
+import { LayoutDashboard, Users, CalendarClock, Plus, Menu, MessageSquarePlus, UserPlus, CheckSquare, MessageCircle, CalendarDays, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   Sheet,
@@ -16,11 +16,21 @@ const quickActions = [
   { href: '/interactions/new', label: 'Log Interaction', description: 'Record a conversation, call, or meeting', icon: MessageSquarePlus },
   { href: '/people/new', label: 'Add Person', description: 'Add someone to your circle', icon: UserPlus },
   { href: '/follow-ups/new', label: 'Schedule Follow-up', description: 'Set a reminder to reach out', icon: CalendarClock },
-  { href: '/commitments', label: 'Add Commitment', description: 'Track a promise made or received', icon: CheckSquare },
+  { href: '/commitments/new', label: 'Add Commitment', description: 'Track a promise made or received', icon: CheckSquare },
+]
+
+const moreLinks = [
+  { href: '/interactions', label: 'Interactions', icon: MessageCircle },
+  { href: '/commitments', label: 'Commitments', icon: CheckSquare },
+  { href: '/weekly-plan', label: 'Weekly Plan', icon: CalendarDays },
+  { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
 export function BottomNav({ pathname }: { pathname: string }) {
   const [showQuickAdd, setShowQuickAdd] = useState(false)
+  const [showMore, setShowMore] = useState(false)
+
+  const isMoreActive = ['/interactions', '/commitments', '/weekly-plan', '/settings'].some((p) => pathname.startsWith(p))
 
   return (
     <>
@@ -39,10 +49,21 @@ export function BottomNav({ pathname }: { pathname: string }) {
           </button>
 
           <NavTab href="/follow-ups" label="Follow-ups" icon={CalendarClock} active={pathname.startsWith('/follow-ups')} />
-          <NavTab href="/settings" label="More" icon={Menu} active={pathname.startsWith('/settings')} />
+
+          <button
+            onClick={() => setShowMore(true)}
+            className={cn(
+              'flex flex-col items-center justify-center gap-1 px-3 py-1.5 rounded-lg min-w-[4rem] transition-colors',
+              isMoreActive ? 'text-teal-600' : 'text-muted-foreground'
+            )}
+          >
+            <Menu className="h-5 w-5" />
+            <span className="text-[10px] font-medium">More</span>
+          </button>
         </div>
       </nav>
 
+      {/* Quick Add Sheet */}
       <Sheet open={showQuickAdd} onOpenChange={setShowQuickAdd}>
         <SheetContent side="bottom" className="rounded-t-2xl pb-10">
           <SheetHeader className="mb-4">
@@ -64,6 +85,32 @@ export function BottomNav({ pathname }: { pathname: string }) {
                   <p className="text-sm font-medium">{action.label}</p>
                   <p className="text-xs text-muted-foreground">{action.description}</p>
                 </div>
+              </Link>
+            ))}
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      {/* More Menu Sheet */}
+      <Sheet open={showMore} onOpenChange={setShowMore}>
+        <SheetContent side="bottom" className="rounded-t-2xl pb-10">
+          <SheetHeader className="mb-4">
+            <SheetTitle>More</SheetTitle>
+            <SheetDescription>Navigate to other sections.</SheetDescription>
+          </SheetHeader>
+          <div className="space-y-1">
+            {moreLinks.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setShowMore(false)}
+                className={cn(
+                  "flex items-center gap-4 px-3 py-3 rounded-xl hover:bg-accent transition-colors",
+                  pathname.startsWith(item.href) && "bg-teal-50 text-teal-700"
+                )}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="text-sm font-medium">{item.label}</span>
               </Link>
             ))}
           </div>

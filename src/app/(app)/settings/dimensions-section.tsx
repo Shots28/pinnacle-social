@@ -13,7 +13,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogClose,
 } from '@/components/ui/dialog'
 import { Plus, Trash2, ArrowUp, ArrowDown, Loader2, Save } from 'lucide-react'
 import { toast } from 'sonner'
@@ -268,7 +267,7 @@ export function DimensionsSection({ dimensions: initialDimensions }: DimensionsS
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
