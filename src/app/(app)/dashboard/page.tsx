@@ -6,7 +6,6 @@ import { StatsRow } from '@/components/dashboard/stats-row'
 import { EmotionalPayoff } from '@/components/dashboard/emotional-payoff'
 import { ActionQueue } from '@/components/dashboard/action-queue'
 import { RecentWins } from '@/components/dashboard/recent-wins'
-import { UniversalActionBar } from '@/components/dashboard/universal-action-bar'
 import type { DashboardStats } from '@/lib/types/app'
 
 function getGreeting(): string {
@@ -24,7 +23,7 @@ export default async function DashboardPage() {
 
   if (!user) redirect('/login')
 
-  // Fetch all data in parallel for dashboard stats
+  // Fetch all data in parallel
   const now = new Date()
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
@@ -41,6 +40,7 @@ export default async function DashboardPage() {
     { count: todaysFollowUpsCount },
     { count: weeklyInteractionsCount },
     { data: recentMilestones },
+    { data: followUps },
   ] = await Promise.all([
     supabase
       .from('people')
@@ -72,6 +72,15 @@ export default async function DashboardPage() {
       .gte('completed_at', weekAgo.toISOString())
       .order('completed_at', { ascending: false })
       .limit(5),
+    supabase
+      .from('follow_ups')
+      .select('*, people(id, first_name, last_name)')
+      .eq('user_id', user.id)
+      .eq('is_completed', false)
+      .gte('scheduled_at', todayStart.toISOString())
+      .lte('scheduled_at', weekEnd.toISOString())
+      .order('scheduled_at', { ascending: true })
+      .limit(10),
   ])
 
   const people = allPeople ?? []
@@ -102,26 +111,8 @@ export default async function DashboardPage() {
     })),
   }
 
-  const { data: followUps } = await supabase
-    .from('follow_ups')
-    .select('*, people(id, first_name, last_name)')
-    .eq('user_id', user.id)
-    .eq('is_completed', false)
-    .gte('scheduled_at', todayStart.toISOString())
-    .lte('scheduled_at', weekEnd.toISOString())
-    .order('scheduled_at', { ascending: true })
-    .limit(10)
-
-  // Fetch people list for quick-log button
-  const { data: peopleList } = await supabase
-    .from('people')
-    .select('id, first_name, last_name')
-    .eq('user_id', user.id)
-    .eq('status', 'active')
-    .order('first_name')
-
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <PageHeader
         title="Dashboard"
         description={`${getGreeting()}! Here's how your relationships are doing.`}
@@ -131,21 +122,19 @@ export default async function DashboardPage() {
 
       <EmotionalPayoff stats={stats} />
 
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold tracking-tight">Your Action Queue</h2>
+      <div className="space-y-3">
+        <h2 className="text-lg font-semibold tracking-tight">Your Action Queue</h2>
         <ActionQueue overduePeople={overduePeople} followUps={followUps ?? []} />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Wins</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RecentWins milestones={stats.recent_milestones} />
-        </CardContent>
-      </Card>
-
-      <UniversalActionBar people={peopleList ?? []} />
+      {stats.recent_milestones.length > 0 && (
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold tracking-tight">Recent Wins</h2>
+          <div className="rounded-xl border bg-card p-4">
+            <RecentWins milestones={stats.recent_milestones} />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

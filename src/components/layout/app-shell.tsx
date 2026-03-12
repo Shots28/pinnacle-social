@@ -15,7 +15,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Main content — offset for sidebar on desktop, bottom nav on mobile */}
       <main className="flex-1 w-full relative md:ml-64 pb-20 md:pb-0">
-        <div className="container mx-auto px-4 py-6 sm:px-6 md:px-8 md:py-8 max-w-5xl">
+        <div className="px-4 py-6 sm:px-6 md:px-10 md:py-8 max-w-4xl">
           {children}
         </div>
       </main>

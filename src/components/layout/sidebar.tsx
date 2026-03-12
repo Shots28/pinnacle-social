@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { LayoutDashboard, Users, CalendarClock, MessageCircle, CheckSquare, CalendarDays, Settings, LogOut } from 'lucide-react'
+import { LayoutDashboard, Users, CalendarClock, MessageCircle, CheckSquare, CalendarDays, Settings, LogOut, MessageSquarePlus, UserPlus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -56,7 +56,38 @@ export function Sidebar({ pathname }: { pathname: string }) {
         <span className="font-semibold text-lg">Pinnacle</span>
       </div>
 
-      <nav className="flex-1 px-3 py-6 space-y-1">
+      {/* Quick actions */}
+      <div className="px-3 pt-5 pb-2 space-y-1.5">
+        <Link
+          href="/interactions/new"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 transition-colors"
+        >
+          <MessageSquarePlus className="h-5 w-5" />
+          Log Interaction
+        </Link>
+        <div className="flex gap-1.5">
+          <Link
+            href="/people/new"
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors border border-border/50"
+          >
+            <UserPlus className="h-3.5 w-3.5" />
+            Add Person
+          </Link>
+          <Link
+            href="/follow-ups/new"
+            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors border border-border/50"
+          >
+            <CalendarClock className="h-3.5 w-3.5" />
+            Follow-up
+          </Link>
+        </div>
+      </div>
+
+      <div className="px-5 pt-1 pb-2">
+        <div className="h-px bg-border" />
+      </div>
+
+      <nav className="flex-1 px-3 space-y-1">
         {coreItems.map((item) => (
           <NavLink key={item.href} item={item} pathname={pathname} />
         ))}
