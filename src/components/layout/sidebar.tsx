@@ -1,7 +1,8 @@
 'use client'
 
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Users, CalendarClock, MessageCircle, CheckSquare, CalendarDays, Settings, LogOut, MessageSquarePlus, UserPlus } from 'lucide-react'
+import { LayoutDashboard, Users, CalendarClock, MessageCircle, CheckSquare, Settings, LogOut, Plus, MessageSquarePlus, UserPlus } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -15,8 +16,14 @@ const coreItems = [
 const moreItems = [
   { href: '/interactions', label: 'Interactions', icon: MessageCircle },
   { href: '/commitments', label: 'Commitments', icon: CheckSquare },
-  { href: '/weekly-plan', label: 'Weekly Plan', icon: CalendarDays },
   { href: '/settings', label: 'Settings', icon: Settings },
+]
+
+const quickActions = [
+  { href: '/interactions/new', label: 'Log Interaction', icon: MessageSquarePlus },
+  { href: '/people/new', label: 'Add Person', icon: UserPlus },
+  { href: '/follow-ups/new', label: 'Schedule Follow-up', icon: CalendarClock },
+  { href: '/commitments/new', label: 'Add Commitment', icon: CheckSquare },
 ]
 
 function NavLink({ item, pathname }: { item: typeof coreItems[number]; pathname: string }) {
@@ -40,6 +47,20 @@ function NavLink({ item, pathname }: { item: typeof coreItems[number]; pathname:
 export function Sidebar({ pathname }: { pathname: string }) {
   const router = useRouter()
   const supabase = createClient()
+  const [showQuickAdd, setShowQuickAdd] = useState(false)
+  const quickAddRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (quickAddRef.current && !quickAddRef.current.contains(e.target as Node)) {
+        setShowQuickAdd(false)
+      }
+    }
+    if (showQuickAdd) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showQuickAdd])
 
   async function handleSignOut() {
     await supabase.auth.signOut()
@@ -56,31 +77,30 @@ export function Sidebar({ pathname }: { pathname: string }) {
         <span className="font-semibold text-lg">Pinnacle</span>
       </div>
 
-      {/* Quick actions */}
-      <div className="px-3 pt-5 pb-2 space-y-1.5">
-        <Link
-          href="/interactions/new"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 transition-colors"
+      {/* Quick add button */}
+      <div className="px-3 pt-5 pb-2 relative" ref={quickAddRef}>
+        <button
+          onClick={() => setShowQuickAdd(!showQuickAdd)}
+          className="flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-lg text-sm font-medium bg-teal-600 text-white hover:bg-teal-700 transition-colors"
         >
-          <MessageSquarePlus className="h-5 w-5" />
-          Log Interaction
-        </Link>
-        <div className="flex gap-1.5">
-          <Link
-            href="/people/new"
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors border border-border/50"
-          >
-            <UserPlus className="h-3.5 w-3.5" />
-            Add Person
-          </Link>
-          <Link
-            href="/follow-ups/new"
-            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors border border-border/50"
-          >
-            <CalendarClock className="h-3.5 w-3.5" />
-            Follow-up
-          </Link>
-        </div>
+          <Plus className={cn("h-5 w-5 transition-transform", showQuickAdd && "rotate-45")} />
+          Quick Add
+        </button>
+        {showQuickAdd && (
+          <div className="absolute left-3 right-3 top-full mt-1 bg-card border rounded-lg shadow-lg z-50 py-1">
+            {quickActions.map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                onClick={() => setShowQuickAdd(false)}
+                className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              >
+                <action.icon className="h-4 w-4" />
+                {action.label}
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="px-5 pt-1 pb-2">

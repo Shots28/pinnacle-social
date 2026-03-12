@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, Users, CalendarClock, Plus, Menu, MessageSquarePlus, UserPlus, CheckSquare, MessageCircle, CalendarDays, Settings } from 'lucide-react'
+import { LayoutDashboard, Users, CalendarClock, Plus, Menu, MessageSquarePlus, UserPlus, CheckSquare, MessageCircle, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
   Sheet,
@@ -22,7 +22,6 @@ const quickActions = [
 const moreLinks = [
   { href: '/interactions', label: 'Interactions', icon: MessageCircle },
   { href: '/commitments', label: 'Commitments', icon: CheckSquare },
-  { href: '/weekly-plan', label: 'Weekly Plan', icon: CalendarDays },
   { href: '/settings', label: 'Settings', icon: Settings },
 ]
 
@@ -30,7 +29,7 @@ export function BottomNav({ pathname }: { pathname: string }) {
   const [showQuickAdd, setShowQuickAdd] = useState(false)
   const [showMore, setShowMore] = useState(false)
 
-  const isMoreActive = ['/interactions', '/commitments', '/weekly-plan', '/settings'].some((p) => pathname.startsWith(p))
+  const isMoreActive = ['/interactions', '/commitments', '/settings'].some((p) => pathname.startsWith(p))
 
   return (
     <>
