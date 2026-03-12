@@ -26,7 +26,7 @@ export default async function DashboardPage() {
   if (!user) redirect('/login')
 
   // Fetch dashboard stats via RPC
-  const { data: statsData } = await supabase.rpc('get_dashboard_stats')
+  const { data: statsData } = await supabase.rpc('get_dashboard_stats', { p_user_id: user.id })
   const stats: DashboardStats = (statsData as DashboardStats) ?? {
     total_people: 0,
     overdue_checkins: 0,

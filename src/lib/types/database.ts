@@ -515,7 +515,7 @@ export interface Database {
     }
     Functions: {
       get_dashboard_stats: {
-        Args: Record<string, never>
+        Args: { p_user_id: string }
         Returns: Json
       }
     }

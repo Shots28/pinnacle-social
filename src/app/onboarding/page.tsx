@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { RELATIONSHIP_TYPES, CONTACT_RHYTHM_OPTIONS } from '@/lib/utils/constants'
+import { toast } from 'sonner'
 import { Sparkles, UserPlus, Clock, Rocket, Loader2 } from 'lucide-react'
 import type { RelationshipType } from '@/lib/types/app'
 
@@ -117,8 +118,8 @@ export default function OnboardingPage() {
       if (error) throw error
       setCreatedPersonId(data.id)
       goNext()
-    } catch (err) {
-      console.error('Failed to create person:', err)
+    } catch {
+      toast.error('Failed to add person. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -136,8 +137,8 @@ export default function OnboardingPage() {
         .update({ contact_rhythm_days: rhythmValue })
         .eq('id', createdPersonId)
       goNext()
-    } catch (err) {
-      console.error('Failed to set rhythm:', err)
+    } catch {
+      toast.error('Failed to set rhythm. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -157,8 +158,8 @@ export default function OnboardingPage() {
         .eq('id', user.id)
 
       router.push('/dashboard')
-    } catch (err) {
-      console.error('Failed to complete onboarding:', err)
+    } catch {
+      toast.error('Something went wrong. Please try again.')
     } finally {
       setSubmitting(false)
     }
