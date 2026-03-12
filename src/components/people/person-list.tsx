@@ -45,14 +45,14 @@ export function PersonList({ people }: PersonListProps) {
   }, [people, activeTab, search])
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search people..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-9"
+          className="pl-10"
         />
       </div>
 
@@ -80,7 +80,7 @@ export function PersonList({ people }: PersonListProps) {
                 actionHref={!search.trim() ? '/people/new' : undefined}
               />
             ) : (
-              <div className="grid gap-2">
+              <div className="grid gap-3">
                 {filtered.map((person) => (
                   <PersonCard key={person.id} person={person} />
                 ))}

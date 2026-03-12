@@ -34,7 +34,7 @@ export function CommitmentList({ commitments, showPerson = false }: CommitmentLi
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Committed-by filter */}
       <div className="flex gap-2">
         {(['all', 'me', 'them'] as const).map((value) => (
@@ -68,7 +68,7 @@ export function CommitmentList({ commitments, showPerson = false }: CommitmentLi
         </TabsList>
 
         <TabsContent value="pending">
-          <div className="space-y-3 mt-4">
+          <div className="space-y-4 mt-4">
             {pending.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">
                 No pending commitments
@@ -87,7 +87,7 @@ export function CommitmentList({ commitments, showPerson = false }: CommitmentLi
         </TabsContent>
 
         <TabsContent value="overdue">
-          <div className="space-y-3 mt-4">
+          <div className="space-y-4 mt-4">
             {overdue.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">
                 No overdue commitments
@@ -106,7 +106,7 @@ export function CommitmentList({ commitments, showPerson = false }: CommitmentLi
         </TabsContent>
 
         <TabsContent value="completed">
-          <div className="space-y-3 mt-4">
+          <div className="space-y-4 mt-4">
             {completed.length === 0 ? (
               <p className="text-sm text-muted-foreground text-center py-8">
                 No completed commitments yet

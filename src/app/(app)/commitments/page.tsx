@@ -23,7 +23,7 @@ export default async function CommitmentsPage() {
     .order('created_at', { ascending: false })
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6">
+    <div className="mx-auto max-w-2xl px-4 py-8">
       <PageHeader
         title="Commitments"
         description="Track promises made and received"

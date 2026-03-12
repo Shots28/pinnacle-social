@@ -29,10 +29,10 @@ export default async function SettingsPage() {
   if (!profile) redirect('/login')
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader title="Settings" description="Manage your profile and preferences." />
 
-      <div className="space-y-8">
+      <div className="space-y-10">
         <ProfileSection profile={profile} />
         <DimensionsSection dimensions={dimensions ?? []} />
         <PreferencesSection profile={profile} />

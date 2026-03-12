@@ -80,7 +80,7 @@ export default async function DashboardPage() {
     .order('first_name')
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Dashboard"
         description={`${getGreeting()}! Here's how your relationships are doing.`}
@@ -90,7 +90,7 @@ export default async function DashboardPage() {
 
       <EmotionalPayoff stats={stats} />
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Overdue Check-ins</CardTitle>

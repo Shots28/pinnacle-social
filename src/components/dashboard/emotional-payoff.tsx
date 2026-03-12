@@ -9,7 +9,7 @@ export function EmotionalPayoff({ stats }: EmotionalPayoffProps) {
   const message = getMessage(stats)
 
   return (
-    <div className="rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 p-5 text-white">
+    <div className="rounded-xl bg-gradient-to-r from-teal-600 to-teal-700 p-6 text-white">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20">
           <message.icon className="h-5 w-5" />

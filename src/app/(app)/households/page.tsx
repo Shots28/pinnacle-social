@@ -152,7 +152,7 @@ export default function HouseholdsPage() {
       />
 
       {loading ? (
-        <div className="grid gap-2">
+        <div className="grid gap-3">
           {[1, 2, 3].map((i) => (
             <Card key={i} size="sm">
               <CardContent>
@@ -170,7 +170,7 @@ export default function HouseholdsPage() {
           onAction={() => setDialogOpen(true)}
         />
       ) : (
-        <div className="grid gap-2">
+        <div className="grid gap-3">
           {households.map((household) => (
             <Link key={household.id} href={`/households/${household.id}`}>
               <Card size="sm" className="transition-colors hover:bg-accent/50 cursor-pointer">

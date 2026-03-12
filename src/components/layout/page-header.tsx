@@ -10,12 +10,12 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, backHref, action }: PageHeaderProps) {
   return (
-    <div className="flex items-start justify-between gap-4 mb-6">
-      <div className="flex items-start gap-3">
+    <div className="flex items-center justify-between gap-4 mb-8">
+      <div className="flex items-center gap-3">
         {backHref && (
           <Link
             href={backHref}
-            className="mt-1 flex h-8 w-8 items-center justify-center rounded-lg hover:bg-accent transition-colors"
+            className="flex h-9 w-9 items-center justify-center rounded-xl hover:bg-accent transition-colors -ml-1"
           >
             <ChevronLeft className="h-5 w-5" />
           </Link>
@@ -23,7 +23,7 @@ export function PageHeader({ title, description, backHref, action }: PageHeaderP
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
           {description && (
-            <p className="text-sm text-muted-foreground mt-1">{description}</p>
+            <p className="text-sm text-muted-foreground mt-1.5">{description}</p>
           )}
         </div>
       </div>

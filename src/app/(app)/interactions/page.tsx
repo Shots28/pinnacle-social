@@ -28,7 +28,7 @@ export default async function InteractionsPage() {
   const allInteractions = interactions ?? []
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Interactions"
         description="Your recent conversations, calls, and activities."

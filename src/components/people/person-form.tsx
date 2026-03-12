@@ -119,12 +119,12 @@ export function PersonForm({ initialData }: PersonFormProps) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="space-y-6">
+      <div className="space-y-8">
         <Card>
           <CardHeader>
             <CardTitle>Basic Information</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label htmlFor="first_name" className="text-sm font-medium">
@@ -200,7 +200,7 @@ export function PersonForm({ initialData }: PersonFormProps) {
           <CardHeader>
             <CardTitle>Contact Details</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label htmlFor="phone" className="text-sm font-medium">
@@ -269,7 +269,7 @@ export function PersonForm({ initialData }: PersonFormProps) {
           <CardHeader>
             <CardTitle>Additional</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-medium">Household</label>
               <Select

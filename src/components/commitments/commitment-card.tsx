@@ -58,8 +58,8 @@ export function CommitmentCard({ commitment, showPerson = false, onStatusChange 
   return (
     <Card>
       <CardContent>
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0 space-y-1.5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex-1 min-w-0 space-y-2">
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold text-sm">{commitment.title}</h3>
               <Badge variant="outline" className={status.className}>

@@ -132,7 +132,7 @@ export default function WeeklyPlanPage() {
 
   if (allPeople.length === 0) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         <PageHeader
           title="Weekly Plan"
           description="Plan your relationship priorities for the week."
@@ -149,7 +149,7 @@ export default function WeeklyPlanPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Weekly Plan"
         description={`Week of ${new Date(currentWeekStart + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`}

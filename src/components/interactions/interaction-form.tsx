@@ -113,7 +113,7 @@ export function InteractionForm({ personId, people, onSuccess }: InteractionForm
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Person select - only show if no personId passed */}
       {!personId && people && (
         <div className="space-y-1.5">
@@ -136,7 +136,7 @@ export function InteractionForm({ personId, people, onSuccess }: InteractionForm
       {/* Type button group */}
       <div className="space-y-1.5">
         <label className="text-sm font-medium">Type</label>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-2">
           {INTERACTION_TYPES.map((t) => {
             const Icon = iconMap[t.icon]
             const isActive = type === t.value

@@ -17,7 +17,7 @@ export function PersonCard({ person }: PersonCardProps) {
   return (
     <Link href={`/people/${person.id}`}>
       <Card size="sm" className="transition-colors hover:bg-accent/50 cursor-pointer">
-        <CardContent className="flex items-center gap-3">
+        <CardContent className="flex items-center gap-4">
           <PersonAvatar
             firstName={person.first_name}
             lastName={person.last_name}
@@ -32,7 +32,7 @@ export function PersonCard({ person }: PersonCardProps) {
               </span>
               <RelationshipBadge type={person.relationship_type} />
             </div>
-            <div className="flex items-center gap-2 mt-0.5">
+            <div className="flex items-center gap-2 mt-1">
               <span className="text-xs text-muted-foreground">
                 Last contact: {formatRelativeTime(person.last_contact_at)}
               </span>

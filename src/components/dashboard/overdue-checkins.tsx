@@ -19,12 +19,12 @@ export function OverdueCheckins({ people }: OverdueCheckinsProps) {
   }
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <ul className="divide-y">
         {people.map((person) => {
           const overdueDays = daysOverdue(person.last_contact_at, person.contact_rhythm_days)
           return (
-            <li key={person.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+            <li key={person.id} className="flex items-center gap-3 py-4 first:pt-0 last:pb-0">
               <PersonAvatar
                 firstName={person.first_name}
                 lastName={person.last_name}

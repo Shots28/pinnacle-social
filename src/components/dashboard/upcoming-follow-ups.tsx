@@ -54,7 +54,7 @@ export function UpcomingFollowUps({ followUps }: UpcomingFollowUpsProps) {
         return (
           <li
             key={followUp.id}
-            className={`flex items-center gap-3 py-3 first:pt-0 last:pb-0 ${isCompleted ? 'opacity-50' : ''}`}
+            className={`flex items-center gap-3 py-4 first:pt-0 last:pb-0 ${isCompleted ? 'opacity-50' : ''}`}
           >
             <Button
               variant="outline"

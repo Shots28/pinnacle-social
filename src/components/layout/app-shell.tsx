@@ -13,8 +13,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Sidebar pathname={pathname} />
 
       {/* Main content */}
-      <main className="md:ml-64 pb-20 md:pb-0 min-h-screen">
-        {children}
+      <main className="md:ml-64 pb-24 md:pb-8 min-h-screen">
+        <div className="px-4 pt-6 pb-2 sm:px-6 md:px-8 md:pt-8 max-w-5xl">
+          {children}
+        </div>
       </main>
 
       {/* Mobile bottom nav */}

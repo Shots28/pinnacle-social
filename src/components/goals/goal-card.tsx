@@ -31,10 +31,10 @@ export function GoalCard({ goal }: GoalCardProps) {
     <Link href={`/people/${goal.person_id}/goals/${goal.id}`}>
       <Card className="transition-shadow hover:shadow-md">
         <CardContent>
-          <div className="flex items-start gap-4">
+          <div className="flex items-start gap-5">
             <GoalProgressRing progress={progress} />
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <div className="flex items-center gap-2 mb-2 flex-wrap">
                 <h3 className="font-semibold text-sm truncate">{goal.title}</h3>
                 <Badge variant="outline" className={status.className}>
                   {status.label}

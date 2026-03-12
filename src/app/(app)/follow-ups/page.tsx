@@ -52,7 +52,7 @@ export default async function FollowUpsPage() {
   const hasFollowUps = (followUps?.length ?? 0) > 0
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6">
+    <div className="mx-auto max-w-2xl px-4 py-8">
       <PageHeader
         title="Follow-ups"
         description="Scheduled reminders to follow up with people"
@@ -88,7 +88,7 @@ export default async function FollowUpsPage() {
                     </span>
                   )}
                 </h2>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {items.map((fu) => (
                     <FollowUpCard key={fu.id} followUp={fu} />
                   ))}

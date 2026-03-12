@@ -18,7 +18,7 @@ export function RecentWins({ milestones }: RecentWinsProps) {
   return (
     <ul className="divide-y">
       {milestones.map((milestone) => (
-        <li key={milestone.id} className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+        <li key={milestone.id} className="flex items-start gap-3 py-4 first:pt-0 last:pb-0">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-50 dark:bg-amber-950/30">
             <PartyPopper className="h-4 w-4 text-amber-600" />
           </div>

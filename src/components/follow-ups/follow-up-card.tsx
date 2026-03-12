@@ -62,7 +62,7 @@ export function FollowUpCard({ followUp, showPerson = true }: FollowUpCardProps)
   return (
     <Card className={cn(completed && 'opacity-60')}>
       <CardContent>
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-4">
           <div className="pt-0.5">
             <Checkbox
               checked={completed}
@@ -70,7 +70,7 @@ export function FollowUpCard({ followUp, showPerson = true }: FollowUpCardProps)
               disabled={loading}
             />
           </div>
-          <div className="flex-1 min-w-0 space-y-1">
+          <div className="flex-1 min-w-0 space-y-1.5">
             <h3
               className={cn(
                 'font-semibold text-sm',

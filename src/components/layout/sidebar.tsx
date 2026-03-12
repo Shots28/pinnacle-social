@@ -35,7 +35,7 @@ export function Sidebar({ pathname }: { pathname: string }) {
         <span className="font-semibold text-lg">Pinnacle</span>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-6 space-y-1">
         {navItems.map((item) => {
           const isActive = pathname.startsWith(item.href)
           return (
